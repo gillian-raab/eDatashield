@@ -1,0 +1,13 @@
+Package: eDataShield
+Version: 0.1
+Date: 2018-11-24
+Title: Combined analyses
+Description: Combined analyses from data held in different locations
+Author: Gillian Raab <gillian.raab@ed.ac.uk>
+Maintainer: Maintainers name <gillian.raab@ed.ac.uk>
+License: GPL-3
+Imports: MASS, stringr
+Suggests: knitr, rmarkdown, MASS, stringr
+VignetteBuilder: knitr
+RoxygenNote: 6.1.0
+Built: R 3.3.1; ; 2018-12-01 09:56:07 UTC; windows

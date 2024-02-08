@@ -1,0 +1,17 @@
+Study1                  Social Diagnosis 2011
+Study2                  Social Diagnosis 2011
+eds.compare             Compare pairs of data structures
+eds.deviance.table      Summarise final model output
+eds.glm.joint.update    Combine results of generalised linear models
+eds.glm.start           Starting parameter values for eds generalised
+                        linear models
+eds.glm.summary         Summarise generalised linear model output
+eds.glm.update          Generalised linear model iteration
+eds.polr.joint.update   Combine results of ordered logistic regressions
+eds.polr.start          Starting parameter values for eds ordered
+                        logistic regression
+eds.polr.summary        Summarise ordered regression output
+eds.polr.update         ordered logistic regression iteration
+eds.prepare             Prepare study data for analysis
+eds.struct              Summarise dataframe structure and check
+                        compatability

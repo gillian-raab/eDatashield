@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>eDataShield</title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">eDataShield</h1>
+
+
+
+<div id="methods-for-combined-analyses-from-data-held-in-different-locations-by-email-exchanges" class="section level2">
+<h2><span style="color:grey">Methods for combined analyses from data held in different locations by email exchanges</span></h2>
+<div id="gillian-m-raab-november-2018" class="section level3">
+<h3><span style="color:grey">Gillian M Raab November 2018</span></h3>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2><strong>1. Introduction</strong></h2>
+<div id="background" class="section level3">
+<h3><em>Background</em></h3>
+<p>The term eDatashield stands for email Data Aggregation Through Anonymous Summary statistics from Harmonized Individual levEL Databases. It is a method that allows combined analyses of data from two or more projects by email exchange.</p>
+<p>Often research projects based on different populations can collect equivalent information, and a joint analysis that combines and compares the results from separate studies is desirable. The three UK census-based Longitudinal Studies are an example of such a set of studies: ONS LS for England and Wales; Northern Ireland Longitudinal Study (NILS) and Scottish Longitudinal Study (SLS). Because confidentiality and disclosure control prevent the data from different studies from being combined, the usual approach is to carry out equivalent analyses on the individual studies and then summarise the results. E.g. as described in [1]. While this approach can deliver results, it is time consuming, and certain aspects are less informative than would be the case for an analysis carried out on the pooled data.</p>
+<p>Methods to overcome this without sharing the data are described by Karr et al (2007) [2] and involve each study providing data summaries to a central analysis hub which has no access to the original confidential data in each centre. The data summaries must not be disclosive of individuals in any study. For statistical models they are usually sufficient statistics for the analysis. Where a method involves an iterative solution, as for most generalised linear models, the joint analysis will require several exchanges of the summary statistics between the individual studies and the analysis computer.</p>
+<p>The DataSHIELD project [3] has outlined how Karr et. al’s methodology can be implemented by having the computers on which the individual studies reside each communicating with a central Analysis Computer (AC). Only non-disclosive summary statistics are passed between the computers. The Individual Study Computers (ISCs) only communicate with the AC and not with each other. A specialised infrastructure is required to run such an analysis that involve secure internet communication as described by the DataSHIELD project [4] using code developed in R.</p>
+<p>This methodology has been adapted for the situation where the separate studies cannot be connected to a central hub, usually because of confidentiality concerns. The eDatashiel (eds) package allows the non-disclosive summaries to be exchanged via email.</p>
+</div>
+<div id="acknowledgements" class="section level3">
+<h3><em>Acknowledgements</em></h3>
+<p>We thank the staff of the IK longitudinal studies, especially Kevin Ralston and Fiona Cox from the Scottish Longitudinal Study, for their help in developing these routines.</p>
+</div>
+</div>
+<div id="practical-implementation-at-the-longitudinal-studies" class="section level2">
+<h2><strong>2. Practical implementation at the Longitudinal Studies</strong></h2>
+<p>The UK longitudinal studies are each held on secure servers with no access to the internet, so this methodology was not possible. To overcome this we have developed the eDataSHIELD (eds) methodology for use with the UK Longitudinal Studies where non-disclosive summaries are exchanged between the ISCs and the AC by email rather than be a secure digital channel. The current eds routines apply to the horizontal case, where each study holds the data on the same variables for different subjects. A pooled analysis is required that can allow differences between studies and the interaction of studies with other variables to be evaluated.</p>
+<p>The eds routines are also written in R [5] but the process of exchanging summaries by email posed challenges that had to be addressed in the design. To carry out the analysis, staff at two or more Research Support Units must carry out analyses and then send non-disclosive summaries from them to the analyst who processes them on the analysis computer (AC) then returns the combined results to the individual studies. The AC does not hold any individual data from either study, but only processes the non-disclosive summaries. Since the ISCs will usually be in secure settings, the outputs sent to the AC must be moved from the secure area to a computer connected to the internet, and the files returned from the AC must similarly be imported back to the safe settings after they are received.</p>
+<p>Thus the routines have been adapted so that the minimum number of email exchanges are required. The first paper that was published using the eDatashield methodology compared mortality by religion between Scotland and Northerm Ireland, Wright et. al. [5].</p>
+<p>The initial versions of eds fitting routines were written so as to fit one model at a time to a set of studies, with the analyst at each site having to have control of the analyses. At each iteration the analysts running the analyses on the study computers (ISCs) read in the joint fit from the analysis computer (AC), updated the result and printed them out to a file to send to the (ISC) analyst controlling the AC. The AC analyst then read in the results from each ISC, combined them and sent the new joint fit back to each ISC for the next iteration. The analysts decided on the names for the files that were exchanged. However, this version of the process was prone to errors when many files were generated, and fitting models one at a time was very labour-intensive.</p>
+<p>Because of this, new routines were written with the following features:</p>
+<ul>
+<li>A series of models, based on the same datasets, are fitted together, and these are defined by a list of formulae.</li>
+<li><p>Each series of models is given a project name.</p></li>
+<li><p>The names of the files to be exchanged between the computers are generated automatically by the R routines, incorporating the project name, the iteration number and the study number (where appropriate).</p></li>
+</ul>
+<p>Thus for a project called ‘PR1’ with three studies being combined, the following files would be exchanged, all of which are created and named by the eds routines.</p>
+<p><code>&quot;Start_project_PR1_Itno_1.R&quot;</code> is prepared and sent to each of the 3 ISCs</p>
+<p><code>&quot;Project_PR1_Itno_1_study_1.R&quot;</code> is sent to AC by ISC1<br />
+<code>&quot;Project_PR1_Itno_1_study_2.R&quot;</code> is sent to AC by ISC2<br />
+<code>&quot;Project_PR1_Itno_1_study_3.R&quot;</code> is sent to AC by ISC3</p>
+<p><code>&quot;Joint_fit_project_PR1_Itno_2.R&quot;</code> is sent to each of ISC1 ISC2 ISC3 by AC</p>
+<p><code>&quot;Project_PR1_Itno_2_study_1.R&quot;</code> is sent to AC by ISC1<br />
+<code>&quot;Project_PR1_Itno_2_study_2.R&quot;</code> is sent to AC by ISC2<br />
+<code>&quot;Project_PR1_Itno_2_study_3.R&quot;</code> is sent to AC by ISC3</p>
+<p><code>&quot;Joint_fit_project_PR1_Itno_3.R&quot;</code> is sent to each of ISC1 ISC2 ISC3 by AC</p>
+<p><code>&quot;Project_PR1_Itno_3_study_1.R&quot;</code> is sent to AC by ISC1<br />
+<code>&quot;Project_PR1_Itno_3_study_2.R&quot;</code> is sent to AC by ISC2<br />
+<code>&quot;Project_PR1_Itno_3_study_3.R&quot;</code> is sent to AC by ISC3</p>
+<p><code>&quot;Joint_fit_project_PR1_Itno_4.R&quot;</code> is sent to each of ISC1 ISC2 ISC3 by AC</p>
+<p>This continues until the output from the joint fit indicates that all models in the series of formulae have converged. The file of the final joint fit contains the results for the series of models.</p>
+</div>
+<div id="edatashield-eds-procedures" class="section level2">
+<h2><strong>3. eDatashield (eds) procedures</strong></h2>
+<div id="overview" class="section level3">
+<h3><em>Overview</em></h3>
+<p>An eDatashield (eds) project consists of the following steps:</p>
+<ol style="list-style-type: decimal">
+<li>Organising and comparing the datasets held at the individual studies to align the variable names, types, levels etc.</li>
+<li>Perhaps exchange some non-disclosive data summaries.</li>
+<li>Decide on the outcome model, method and set of models to be run jointly combining data from the individual studies.</li>
+<li>One study creates an initial structure including the definition of the methods and models and calculates starting values based on one study.</li>
+<li>The iterative procedure to fit the joint model is carried out by exchanging summaries by email between individual study computers (ISCs) and the analysis computer (AC).</li>
+<li>Once the models have converged the result can be shared between all parties and summaries produced.</li>
+</ol>
+<p>The procedures available as part of eDatashield to carry out these steps are described in the following sub-sections. At present eDatashield can be used to fit generalised linear models (<code>glm</code> in R) and ordered logisitic regression (<code>polr</code> in R).</p>
+<p>If a linear model is fitted, only a single iteration is required, but for non-linear models (e.g. logistic or poisson models) a number of iterations will be needed. With good starting values this number should not be more than eight or nine iterations, and intermediate outputs will indicate that the deviance is coming down in an appropriate way.</p>
+<p>Details of the eds routines used in these analyses are detailed below.</p>
+</div>
+<div id="preparing-data-and-checking-compatibility-of-datasets" class="section level3">
+<h3><em>Preparing data and checking compatibility of datasets</em></h3>
+<p>The first step in carrying out these joint analyses is for the analysts to agree on the variables they will require for their models and also to agree how any categorical data are defined in the R data frames so as to ensure they have exactly the same levels and codes. The importance of this step was emphasised in the Datashield project where a special tool called DataSHaper was developed [6]. At each study a structure file describing the data set is created with</p>
+<p><code>eds.struct(data = &quot;Scotland&quot;, output = NULL)</code></p>
+<p><code>data</code> - name of data set<br />
+<code>output</code> - name of output file defaults to <code>struct_data.R</code></p>
+<p>This file and the corresponding file from the other studies are then assembled together at another computer (which could either be the AC or one of the ISCs). Note that the data sets to be combined (held on separate computers) should have distinct names, as these will be used by the eds routines. This computer then uses <code>eds.compare</code> to compare pairs of structures</p>
+<p><code>source(&quot;struct_Scotland.R&quot;)</code><br />
+<code>source(&quot;struct_England.R&quot;)</code><br />
+<code>eds.compare(s1 = struct_Scotland, s2 = struct_England)</code></p>
+<p>The variables that are held in common between the two data sets will be compared according to data types, and other features. Modifications are agreed until all common variables are compatible. The analysts also agree which study number (between 1 and total number of studies) will be assigned to each ISC. Each ISC then uses the function <code>eds.prepare</code> (see below) to produce a dataset for analysis. This function does some checks, converts any character data in the data frame to R factors, and adds a column to each dataset with the appropriate study number, stored as a factor with the appropriate number of levels e.g.</p>
+<p><code>Scotland &lt;- eds.prepare(data = Scotland,studyno = 1,totstuds = 3)</code></p>
+</div>
+<div id="exchanging-non-disclosive-summaries" class="section level3">
+<h3><em>Exchanging non-disclosive summaries</em></h3>
+<p>Basic summaries, tables of means and counts should be compared between the studies at this stage to ensure some similarity of the variables. One eds routine has been written to facilitate this</p>
+<p><code>print(eds.data.summary(Scotland,min_cell=10))</code></p>
+<p>This routine incorporates checks on whether the data are disclosive due to small cell counts, and pools categories or supresses maximum or minimum values as necessary. Additionally any printed output from an ISC should be checked by the staff of that LS’s Research Support Unit to ensure that the requirements for confidentiality of that LS are fully met.</p>
+<p>These preliminary steps are very important, as has been discussed in relation to the DataSHIELD project [4]. Several exchanges may be needed to harmonise the data before the formal model-fitting can begin. Assurance that the same types of data are being used by all studies is an important advantage of this methodology.</p>
+</div>
+<div id="defining-the-models" class="section level3">
+<h3><em>Defining the models</em></h3>
+<p>Once an outcome variable and type of model have been agreed the series of models for which a joint fit will be estimated needs to be defined. Usually these will be a series of models that increase in complexity e.g.</p>
+<p><code>&quot;smoke ~ 1&quot;, &quot;smoke ~ agegroup&quot;, &quot;smoke ~ agegroup + studyno&quot;, &quot;smoke ~ agegroup + studyno*agegroup&quot;</code></p>
+<p>Note that the variable studyno which compares the studies can be included in models. Models may include the factor for study (studyno) as a predictor. Such models can be used to check which aspects of the model differ between studies, by fitting covariate by study interaction terms. These models cannot be fitted from only one study, thus starting values for coefficients involving studyno will normally be set to zero (see below).</p>
+<p>If it is desired to compare models using a deviance table it is important that the same data set is used in each model. If some variables have missing values the data sets for different models will differ, so it may be helpful to use list-wise deletion to remove records with missing values. A function to do this has been written e.g.</p>
+<p><code>Scotland_noNA &lt;- eds.removeNA(Scotland, vars = c(&quot;smoke&quot;, &quot;agegroup&quot;)</code></p>
+</div>
+<div id="creating-starting-structure" class="section level3">
+<h3><em>Creating starting structure</em></h3>
+<p>The first stage is to define the series of models to be fitted and calculate appropriate starting values for each. On any (but only one) ISC, a starting result is created. It must be a list called result with components:</p>
+<ol style="list-style-type: decimal">
+<li>project - Name of project (i.e. set of models) e.g. “Firstmods”<br />
+</li>
+<li>formulae - vector of formulae for models to be fitted<br />
+</li>
+<li>models - vector of names corresponding to the formulae<br />
+</li>
+<li>family - for glm models type of model, e.g. “poisson”<br />
+</li>
+<li>method - for polr models (defaults to logistic)<br />
+</li>
+<li>Itno - set to 1 at first iteration coef - list of starting values for coefficients of the models<br />
+</li>
+<li>weights - (optional) e.g. “wt”, the name of a variable or a vector of variable names to use as a weights. Can be used to exclude rows by setting some wt values to zero<br />
+</li>
+<li>offset - (optional) for glm models only to define the offset, usually for poisson models. Offset is the name of a variable to be used as an offset - e.g. offset= “log_pyears”<br />
+</li>
+<li>coef - (optional, but advised for glm fits) starting values for the coefficients</li>
+</ol>
+<p>Code to set an object <code>&quot;result&quot;</code> to this starting result must be written to a file called <code>&quot;Start_project_PR1_Itno_1.R&quot;</code>. This file is then sent to each study computer. During the fitting process the R structure result on each ISC and on the AC is updated at each iteration. This is most easily created by the functions <code>eds.glm.start</code> or <code>eds.polr.start</code>. A sample call might be</p>
+<p><code>eds.glm.start(project = &quot;EngScotNI&quot;, data = Scotland, formulae = c(&quot;smoke ~ 1&quot;,&quot;smoke ~ age&quot;, &quot;smoke ~ age + studyno&quot;), models = c(&quot;null&quot;,&quot;age&quot;,&quot;age + studyno&quot;), family = &quot;binomial&quot;)</code></p>
+<p>The parameter data is the data being used to calculate the starts, here the one that holds the data set Scotland. This call will write a text file <code>&quot;Start_ project_EngScotNI_Itno_1.R&quot;</code> which is then sent to the other two centres. Note that models that include studyno cannot be run on individual studies. Starting values are created from a reduced model and the additional parameters are set to zero.</p>
+</div>
+<div id="iscs-and-ac-run-first-iteration" class="section level3">
+<h3><em>ISCs and AC run first iteration</em></h3>
+<p>Each ISC places the file in the directory that R is using as the working directory, and runs the eds command, for example for England</p>
+<p><code>eds.glm.update(&quot;EngScotNI&quot;,itno = 1,data=England)</code></p>
+<p>where England is the name of the local data set. This would produce a file <code>&quot;Project_EngScotNI_Itno_1_Study_2.R&quot;</code> containing the contribution to the score statistic and the information matrix from this study. Each ISC then sends their file to the AC.</p>
+<p>The AC analyst then places all these files:</p>
+<ul>
+<li><code>&quot;Project_EngScotNI_Itno_1_Study_1.R&quot;</code></li>
+<li><code>&quot;Project_EngScotNI_Itno_1_Study_2.R&quot;</code></li>
+<li><code>&quot;Project_EngScotNI_Itno_1_Study_3.R&quot;</code></li>
+</ul>
+<p>In the directory where they will run the joint update and runs R from this directory with the command</p>
+<p><code>eds.joint.update(&quot;EngScotNI&quot;,itno = 1,studies=1:3)</code></p>
+<p>This function will write a file <code>&quot;Joint_fit_project_EngScotNI_Itno_2.R&quot;</code> which is sent to the ISCs to run iteration 2.</p>
+</div>
+<div id="subsequent-iterations" class="section level3">
+<h3><em>Subsequent iterations</em></h3>
+<p>The steps described above are then repeated at subsequent iterations. The only parameter to the functions that requires changed is Itno since everything else is read from the exchanged files. The output at the AC allows the convergence of the models to be checked. More details of how the models are converging can be produced by setting the parameter quietly to FALSE e.g.</p>
+<p><code>eds.joint.update(&quot;EngScotNI&quot;,itno = 4,studies=1:3)</code></p>
+<p>And more details can be obtained as follows on the AC</p>
+<p><code>eds.joint.update(&quot;EngScotNI&quot;,itno = 6,studies=1:3)</code><br />
+<code>source(&quot;Joint_fit_project_EngScotNI_Itno_2.R&quot;)</code><br />
+<code>eds.check.convergence(result)</code></p>
+<p>Note that here, and at every stage, sourcing an exchanged file into R will create an object R which is a list of components of the fit, as detailed in Appendix A.</p>
+<p>Once all the models have converged the file for the joint fit is circulated to all parties.</p>
+</div>
+<div id="examining-the-results" class="section level3">
+<h3><em>Examining the Results</em></h3>
+<p>Once the models have converged, the analysis computer can send the final joint fit to each study computer. The ISCs then need to run a command like</p>
+<p><code>source(&quot;Joint_fit_project_EngScotNIs_Itno_7.R&quot;)</code></p>
+<p>They will now have an R object called <code>&quot;result&quot;</code> with the results of the fits to the series of models. It is advisable to rename this to something else by copying into another structure, e.g.</p>
+<p><code>final_fit_Test&lt;-result</code></p>
+<p>Individual components can be extracted, and there are two functions that can be used to get details of the fits</p>
+<p><code>eds.deviance.table(final_fit_Test)</code></p>
+<p>which produces a table of deviances and degrees of freedom for each of the fitted models. Note that care must be taken with interpreting results as P-values quoted will only be relevant if the models use the same numbers of observations. Missing values and weights set to zero for some observations can cause the numbers to differ between models.</p>
+<p>The functions to summarise results produce tables of coefficients, standard errors etc. For selected models, or all models by default. There are two such functions:</p>
+<p><code>eds.glm.summary(final_fit_Test,models = 1:3)</code><br />
+<code>eds.polr.summary(polr_fit_Test,models = 4)</code></p>
+<p>These produce output for each model similar to the function summary applied to a <code>glm</code> fit or a <code>polr</code> fit.</p>
+</div>
+</div>
+<div id="appendix-a-sample-code" class="section level2">
+<h2><strong>4. Appendix A: Sample code</strong></h2>
+<p>In order to test the eds functions, two data sets are provided called Study1 and Study2. These are subsets of the SD2011 data provided with the <code>synthpop</code> package, one is for men and one for women.</p>
+<p>When both data sets are held on the same computer the routines can be tested easiy since the files created will all reside in the right place with the need for emails. This also allows it to be demonstrated that eds produces exactly the same results as would be obtained if the data sets were combined. The code for three analyses are presented here.</p>
+<div id="a-simple-logistic-regression-model" class="section level3">
+<h3><em>A simple logistic regression model</em></h3>
+<p><code>library(MASS)</code><br />
+<code>library(stringr)</code><br />
+<code>library(eDataShield)</code></p>
+<p><code>data(Study1)</code><br />
+<code>data(Study2)</code></p>
+<p><code>Study1 &lt;- eds.prepare(Study1,1,2)  #ISC1</code><br />
+<code>Study2 &lt;- eds.prepare(Study2,2,2)  #ISC2</code></p>
+<p><code>eds.struct(Study1)  #ISC1</code><br />
+<code>eds.struct(Study2)  #ISC2</code><br />
+<code>#Now email files &quot;struct_Study1.R&quot; &quot;struct_Study2.R&quot; to other computers</code></p>
+<p><code>source(&quot;struct_Study1.R&quot;); source(&quot;struct_Study2.R&quot;)   #any ISC or AC</code><br />
+<code>eds.compare(struct_Study1,struct_Study2)</code></p>
+<p><code>eds.glm.start(project = &quot;test1&quot;, data = Study1,</code><br />
+<code>formulae = c(&quot;smoke ~ 1&quot;,&quot;smoke ~ studyno&quot;,&quot;smoke ~ age&quot;, &quot;smoke ~ age + studyno&quot;,&quot;smoke ~ age*studyno&quot;), models = c(&quot;null&quot;,&quot;studyno&quot;,&quot;age&quot;,&quot;age studyno&quot;,&quot;age*studyno&quot;), family = &quot;binomial&quot;)  # ISC1</code></p>
+<p><code>eds.glm.update(&quot;test1&quot;,1, Study1)  #ISC1</code><br />
+<code>eds.glm.update(&quot;test1&quot;,1, Study2)  #ISC2</code><br />
+<code>eds.glm.joint.update(&quot;test1&quot;,1,studies=1:2)  #AC</code></p>
+<p><code>eds.glm.update(&quot;test1&quot;,2, Study1)  #ISC1</code><br />
+<code>eds.glm.update(&quot;test1&quot;,2, Study2)  #ISC2</code><br />
+<code>eds.glm.joint.update(&quot;test1&quot;,2,studies=1:2)  #AC</code></p>
+<p><code>eds.glm.update(&quot;test1&quot;,3, Study1)  #ISC1</code><br />
+<code>eds.glm.update(&quot;test1&quot;,3, Study2)  #ISC2</code><br />
+<code>eds.glm.joint.update(&quot;test1&quot;,3,studies=1:2)  #AC</code></p>
+<p><code>eds.glm.update(&quot;test1&quot;,4, Study1)  #ISC1</code><br />
+<code>eds.glm.update(&quot;test1&quot;,4, Study2)  #ISC2</code><br />
+<code>eds.glm.joint.update(&quot;test1&quot;,4,studies=1:2)  #AC</code></p>
+<p><code>eds.glm.update(&quot;test1&quot;,5, Study1)  #ISC1</code><br />
+<code>eds.glm.update(&quot;test1&quot;,5, Study2)  #ISC2</code><br />
+<code>eds.glm.joint.update(&quot;test1&quot;,5,studies=1:2)  #AC</code></p>
+<p><code>source(&quot;Joint_fit_project_test1_Itno_6.R&quot;)   #all computers</code></p>
+<p><code>eds.deviance.table(result)</code><br />
+<code>eds.glm.summary(result,5)</code><br />
+<code>#compares with result from combined data</code></p>
+<p><code>summary(glm(smoke ~ age + studyno + age:studyno, data = rbind(Study1,Study2), family = &quot;binomial&quot;))</code></p>
+</div>
+<div id="a-more-complicated-set-of-analyses-using-polr" class="section level3">
+<h3><em>A more complicated set of analyses using polr</em></h3>
+<p><code>library(MASS)</code><br />
+<code>library(stringr)</code><br />
+<code>library(eDataShield)</code></p>
+<p><code>data(Study1)</code><br />
+<code>data(Study2)</code></p>
+<p><code># weights for testing</code><br />
+<code>Study1 &lt;- eds.prepare(Study1, 1, 2)</code><br />
+<code>Study1$wt1 &lt;- 1; Study1$wt1[1:1000] &lt;- 0</code><br />
+<code>Study2 &lt;- eds.prepare(Study2, 2, 2)</code><br />
+<code>Study2$wt1 &lt;- 1; Study2$wt1[1:1000] &lt;- 0</code></p>
+<p><code>#get start on one of the ISCs</code><br />
+<code>eds.polr.start(project = &quot;test1&quot;, data = Study1, formulae = c(&quot;ls ~ studyno&quot;,&quot;ls ~ age&quot;, &quot;ls ~ 1&quot; , &quot;ls ~ age +</code> <code>height + englang*studyno&quot;,&quot;ls ~ 1&quot;, &quot;ls ~ englang + studyno&quot;,&quot;ls ~ age + studyno:age&quot;),weights</code> <code>=c(&quot;&quot;,&quot;wt1&quot;,&quot;wt1&quot;,&quot;wt1&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;),method = &quot;logistic&quot;,</code> <code>models = c(&quot;studyno&quot;,&quot;age wt1&quot;, &quot;null wt1&quot; , &quot;age height englang englang*studyno wt1&quot;,&quot;null&quot;, &quot;englang studyno&quot;,&quot;studyno*age&quot;))</code><br />
+<code>#now email Start_project_test1_Itno_1.R to ISC2</code></p>
+<p><code>############################# ITERATION 1 ############################</code><br />
+<code>#on ISC1</code><br />
+<code>eds.polr.update(&quot;test1&quot;,1,Study1)   #this accesses file Start_project_test1_Itno_1.R</code><br />
+<code>#now email &quot;Project_test1_Itno_1_Study_1.R&quot; to AC</code></p>
+<p><code>#on ISC2</code><br />
+<code>eds.polr.update(&quot;test1&quot;,1,Study2)   #this accesses file Start_project_test1_Itno_1.R</code><br />
+<code>#now email &quot;Project_test1_Itno_1_Study_2.R&quot; to AC</code></p>
+<p><code>#on AC</code><br />
+<code>eds.polr.joint.update(&quot;test1&quot;,1, quietly = FALSE)  #this accesses the two files from ISC1 and ISC2</code><br />
+<code>#now email Joint_fit_project_test1_Itno_2.R to each ISC</code></p>
+<p><code>##########################  now iteration 2 ########################</code><br />
+<code>#on ISC1</code><br />
+<code>eds.polr.update(&quot;test1&quot;,2,Study1)   #this accesses file Start_project_test1_Itno_2.R</code><br />
+<code>#now email &quot;Project_test1_Itno_2_Study_1.R&quot; to AC</code></p>
+<p><code>#on ISC2</code><br />
+<code>eds.polr.update(&quot;test1&quot;,2,Study2)   #this accesses file Start_project_test1_Itno_2.R</code><br />
+<code>#now email &quot;Project_test1_Itno_2_Study_2.R&quot; to AC</code></p>
+<p><code>#on AC</code><br />
+<code>eds.polr.joint.update(&quot;test1&quot;,2, quietly = FALSE)   #this accesses the two files from ISC1 and ISC2</code><br />
+<code>#now email Joint_fit_project_test1_Itno_3.R to each ISC</code></p>
+<p><code>##########################  now iteration 3 ########################</code><br />
+<code>#on ISC1</code><br />
+<code>eds.polr.update(&quot;test1&quot;,3,Study1)    #this accesses file Start_project_test1_Itno_3.R</code><br />
+<code>#now email &quot;Project_test1_Itno_3_Study_1.R&quot; to AC</code></p>
+<p><code>#on ISC2</code> <code>eds.polr.update(&quot;test1&quot;,3,Study2)   #this accesses file Start_project_test1_Itno_3.R</code> <code>#now email &quot;Project_test1_Itno_3_Study_2.R&quot; to AC</code></p>
+<p><code>#on AC</code><br />
+<code>eds.polr.joint.update(&quot;test1&quot;,3, quietly = FALSE)   #this accesses the two files from ISC1 and ISC2</code><br />
+<code>#now email Joint_fit_project_test1_Itno_4.R to each ISC</code></p>
+<p><code>##########################  now iteration 4 ########################</code><br />
+<code>#on ISC1</code><br />
+<code>eds.polr.update(&quot;test1&quot;,4,Study1)    #this accesses file Start_project_test1_Itno_4.R</code><br />
+<code>#now email &quot;Project_test1_Itno_4_Study_1.R&quot; to AC</code></p>
+<p><code>#on ISC2</code><br />
+<code>eds.polr.update(&quot;test1&quot;,4,Study2)   #this accesses file Start_project_test1_Itno_4.R</code><br />
+<code>#now email &quot;Project_test1_Itno_4_Study_2.R&quot; to AC</code></p>
+<p><code>#on AC</code><br />
+<code>eds.polr.joint.update(&quot;test1&quot;,4)     #this accesses the two files from ISC1 and ISC2</code><br />
+<code>#now email Joint_fit_project_test1_Itno_5.R to each ISC</code></p>
+<p><code>##########################  now iteration 5 #######################</code><br />
+<code>#running one more even though all converged</code><br />
+<code>#on ISC1</code><br />
+<code>eds.polr.update(&quot;test1&quot;,5,Study1)    #this accesses file Start_project_test1_Itno_5.R</code></p>
+<p><code>#on ISC2</code><br />
+<code>eds.polr.update(&quot;test1&quot;,5,Study2)    #this accesses file Start_project_test1_Itno_5.R</code></p>
+<p><code>#on AC</code><br />
+<code>eds.polr.joint.update(&quot;test1&quot;,5, quietly = FALSE)    #this accesses the two files from ISC1 and ISC2</code><br />
+<code>#File Joint_fit_project_test1_Itno_6.R has final result to be shared by all</code></p>
+<p><code>############################## NOW SUMMARISE ###########################################</code></p>
+<p><code>source(&quot;Joint_fit_project_test1_Itno_6.R&quot;)</code><br />
+<code>names(result)</code></p>
+<p><code>result$coefficients</code><br />
+<code>result$coef</code><br />
+<code>result$zeta</code><br />
+<code>result$dev</code><br />
+<code>result$nobs</code><br />
+<code>result$neffobs</code></p>
+<p><code>summary.result &lt;- eds.polr.summary(result)</code><br />
+<code>eds.deviance.table(result)</code></p>
+<p><code>#No compare 3rd model with that from combined data</code></p>
+<p><code>resboth &lt;- polr(result$formulae[1], rbind(Study1,Study2), method = &quot;logistic&quot;,Hess = TRUE)</code><br />
+<code>summary(resboth)</code></p>
+<p><code>eds.polr.summary(result,1)</code></p>
+<p><code>resboth &lt;- polr(result$formulae[2], rbind(Study1,Study2), method = &quot;logistic&quot;,weights = wt1,Hess = TRUE)</code><br />
+<code>summary(resboth)</code></p>
+<p><code>eds.polr.summary(result,2)</code></p>
+</div>
+</div>
+<div id="appendix-b-details-of-r-objects" class="section level2">
+<h2><strong>5. Appendix B: Details of R objects</strong></h2>
+<div id="result-object" class="section level3">
+<h3><em>Result object</em></h3>
+<table style="width:89%;">
+<colgroup>
+<col width="23%"></col>
+<col width="65%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Component</th>
+<th align="left">Details</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">project</td>
+<td align="left">project name</td>
+</tr>
+<tr class="even">
+<td align="left">formulae</td>
+<td align="left">list of formulae for fitted models</td>
+</tr>
+<tr class="odd">
+<td align="left">models</td>
+<td align="left">names for fitted models</td>
+</tr>
+<tr class="even">
+<td align="left">itno</td>
+<td align="left">final iteration number</td>
+</tr>
+<tr class="odd">
+<td align="left">offset</td>
+<td align="left">offset variable name</td>
+</tr>
+<tr class="even">
+<td align="left">weights</td>
+<td align="left">variable name or vector of variable names (one per model) used as a weight</td>
+</tr>
+<tr class="odd">
+<td align="left">family (glm only)</td>
+<td align="left">family for glm (e.g. “binomial”)</td>
+</tr>
+<tr class="even">
+<td align="left">method (polr only)</td>
+<td align="left">method for intercept in polr, defaults to “logistic”</td>
+</tr>
+<tr class="odd">
+<td align="left">coef</td>
+<td align="left">list of final fitted coefficients for each model</td>
+</tr>
+<tr class="even">
+<td align="left">coefficients (polr only)</td>
+<td align="left">parameters for predictors</td>
+</tr>
+<tr class="odd">
+<td align="left">zeta</td>
+<td align="left">intercept parameters ( see help for polr)</td>
+</tr>
+<tr class="even">
+<td align="left">data_names</td>
+<td align="left">vector names of the datasets used in each of the fits one for each study</td>
+</tr>
+<tr class="odd">
+<td align="left">dev</td>
+<td align="left">list of final deviance for each model</td>
+</tr>
+<tr class="even">
+<td align="left">info</td>
+<td align="left">list with information matrix for each model</td>
+</tr>
+<tr class="odd">
+<td align="left">score</td>
+<td align="left">list with score vector for each fit</td>
+</tr>
+<tr class="even">
+<td align="left">nobs</td>
+<td align="left">vector of total observations from each study</td>
+</tr>
+<tr class="odd">
+<td align="left">neffobs</td>
+<td align="left">matrix giving effective number of observations for each model from each study, excluding those excluded due to missing values or zero weights</td>
+</tr>
+<tr class="even">
+<td align="left">devold</td>
+<td align="left">list of deviances at penultimate iteration</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="list-of-eds-functions" class="section level3">
+<h3><em>List of eds functions</em></h3>
+<table>
+<colgroup>
+<col width="25%"></col>
+<col width="74%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Component</th>
+<th align="left">Parameters and default values</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">eds.prepare</td>
+<td align="left">data,studyno=NULL,totstuds=NULL</td>
+</tr>
+<tr class="even">
+<td align="left">eds.struct</td>
+<td align="left">data,output=NULL</td>
+</tr>
+<tr class="odd">
+<td align="left">eds.compare</td>
+<td align="left">s1, s2</td>
+</tr>
+<tr class="even">
+<td align="left">eds.glm.start</td>
+<td align="left">project, data, formulae, models, family = “binomial”, weights = NULL, offset = NULL</td>
+</tr>
+<tr class="odd">
+<td align="left">eds.glm.update</td>
+<td align="left">project,itno, data=NULL, quietly = TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">eds.glm.joint.update</td>
+<td align="left">project,itno, studies=1:2, tol=1e-4, quietly=TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">eds.glm.summary</td>
+<td align="left">result, modelnos=NULL, round=4, print=TRUE, save= FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">eds.polr.start</td>
+<td align="left">project, data, formulae, models, method = “logistic”, weights = NULL</td>
+</tr>
+<tr class="odd">
+<td align="left">eds.polr.update</td>
+<td align="left">project,itno, data=NULL, quietly = TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">eds.polr.joint.update</td>
+<td align="left">project,itno, studies=1:2, tol=1e-4, quietly=TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">eds.polr.summary</td>
+<td align="left">result, modelnos=NULL, round=4, print=TRUE, save= FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">eds.deviance.table</td>
+<td align="left">result</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2><strong>6. References</strong></h2>
+<ol style="list-style-type: decimal">
+<li>Young, H., Grundy, E., O’Reilly, D. and Boyle, P. (2010) Self-rated health and mortality in the UK: results from the first comparative analysis of the England and Wales, Scotland, and Northern Ireland Longitudinal Studies. Population Trends;139(Spring):11-36</li>
+<li>Karr, A.F., Fulp, W.J., Vera, F., Young, S.S., Lin, X. and Reiter, J.P. (2007) Secure, Privacy-Preserving Analysis of Distributed Databases. Technometrics;49(3):335-345, <a href="DOI:10.1198/004017007000000209" class="uri">DOI:10.1198/004017007000000209</a></li>
+<li>Wolfson, M., Wallace, S.E., Masca, N., Rowe, G., Sheehan, N.A., Ferretti, V., Laflamme, P., Tobin, M.D., MacLeod, J., Little, J., Fortier, I., Knoppers, B.M. and Burton, P.R. (2010) DataSHIELD: resolving a conflict in contemporary bioscience–performing a pooled analysis of individual-level data without sharing the data. International Journal of Epidemiology;39:1372-1382</li>
+<li>Gaye, A., Marcon, Y., Isaeva, J., LaFlamme, P., Turner, A., Jones, E.M., Minion, J., Boyd, A.W., Newby, C.J., Nuotio, M-L., Wilson, R., Butters, O., Murtagh, B.P., Doiron, D., Giepmans, L., Wallace, S.E., Budin-Ljosne, I., Schmidt, C.O., Boffetta, P., Boniol, M., Bota, M., Carter, K.W., deKlerk, N., Dibben, C., Francis, R.W., Hiekkalinna, T., Hveem, K., Kvaloy, K., Millar, S., Perry, I.J., Peters, A., Phillips, C.M., Popham, F., Raab, G., Reischl, E., Sheehan, N., Waldenberger, M., Perola, M., van den Heuvel, E., Macleod, J., Knoppers, B.M., Stolk, R.P., Fortier, I., Harris, J.R., Woffenbuttel, B.H.R., Murtagh, M.J., Ferretti, V. and Burton, P.R. (2014). DataSHIELD: taking the analysis to the data, not the data to the analysis. International Journal of Epidemiology ;43(6):1929-44</li>
+<li>Wright, D. M., Rosato, M., Raab, G., Dibben, C., Boyle, P. and O’Reilly, D. (2017). Does equality legislation reduce intergroup differences? Religious affiliation, socio-economic status and mortality in Scotland and Northern Ireland: a cohort study of 400,000 people Health and Place, 32-38. <a href="DOI:10.1016/j.healthplace.2017.02.009" class="uri">DOI:10.1016/j.healthplace.2017.02.009</a></li>
+<li>Fortier, I., Burton, P.R., Robson, P.J., Ferretti, V., Little, J., L’Heureux, F., Desch</li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

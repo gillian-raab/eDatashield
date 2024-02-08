@@ -1,0 +1,440 @@
+---
+title: "eDataShield"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{eDataShield}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+##<span style="color:grey">Methods for combined analyses from data held in different locations by email exchanges</span>
+###<span style="color:grey">Gillian M Raab November 2018</span>
+
+
+##**1. Introduction**
+###*Background*
+The term eDatashield stands for email Data Aggregation Through Anonymous Summary statistics from Harmonized Individual levEL Databases. It is a method that allows combined analyses of data from two or more projects by email exchange.
+
+Often research projects based on different populations can collect equivalent information, and a joint analysis that combines and compares the results from separate studies is desirable. The three UK census-based Longitudinal Studies are an example of such a set of studies: ONS LS for England and Wales; Northern Ireland Longitudinal Study (NILS) and Scottish Longitudinal Study (SLS). Because confidentiality and disclosure control prevent the data from different studies from being combined, the usual approach is to carry out equivalent analyses on the individual studies and then summarise the results. E.g. as described in [1]. While this approach can deliver results, it is time consuming, and certain aspects are less informative than would be the case for an analysis carried out on the pooled data. 
+
+Methods to overcome this without sharing the data are described by Karr et al (2007) [2] and involve each study providing data summaries to a central analysis hub which has no access to the original confidential data in each centre.  The data summaries must not be disclosive of individuals in any study. For statistical models they are usually sufficient statistics for the analysis. Where a method involves an iterative solution, as for most generalised linear models, the joint analysis will require several exchanges of the summary statistics between the individual studies and the analysis computer.
+
+The DataSHIELD project [3] has outlined how Karr et. al's methodology can be implemented by having the computers on which the individual studies reside each communicating with a central Analysis Computer (AC). Only non-disclosive summary statistics are passed between the computers. The Individual Study Computers (ISCs) only communicate with the AC and not with each other. A specialised infrastructure is required to run such an analysis that involve secure internet communication as described by the DataSHIELD project [4] using code developed in R. 
+
+This methodology has been adapted for the situation where the separate studies cannot be connected to a central hub, usually because of confidentiality concerns. The eDatashiel (eds) package allows the non-disclosive summaries to be exchanged via email.
+
+###*Acknowledgements*
+We thank the staff of the IK longitudinal studies, especially Kevin Ralston and Fiona Cox from the Scottish Longitudinal Study, for their help in developing these routines.
+
+
+##**2. Practical implementation at the Longitudinal Studies**
+
+The UK longitudinal studies are each held on secure servers with no access to the internet, so this methodology was not possible. To overcome this we have developed the eDataSHIELD (eds) methodology for use with the UK Longitudinal Studies where non-disclosive summaries are exchanged between the ISCs and the AC by email rather than be a secure digital channel. The current eds routines  apply to the horizontal case, where each study holds the data on the same variables for different subjects. A pooled analysis is required that can allow differences between studies and the interaction of studies with other variables to be evaluated.
+
+The eds routines are also written in R [5] but the process of exchanging summaries by email posed challenges that had to be addressed in the design. To carry out the analysis, staff at two or more Research Support Units must carry out analyses and then send non-disclosive summaries from them to the analyst who processes them on the analysis computer (AC) then returns the combined results to the individual studies. The AC does not hold any individual data from either study, but only processes the non-disclosive summaries. Since the ISCs will usually be in secure settings, the outputs sent to the AC must be moved from the secure area to a computer connected to the internet, and the files returned from the AC must similarly be imported back to the safe settings after they are received. 
+
+Thus the routines have been adapted so that the minimum number of email exchanges are required. The first paper that was published using the eDatashield methodology compared mortality by religion between Scotland and Northerm Ireland, Wright et. al. [5].
+
+The initial versions of eds fitting routines were written so as to fit one model at a time to a set of studies, with the analyst at each site having to have control of the analyses. At each iteration the analysts running the analyses on the study computers (ISCs) read in the joint fit from the analysis computer (AC), updated the result and printed them out to a file to send to the (ISC) analyst controlling the AC.  The AC analyst then read in the results from each ISC, combined them and sent the new joint fit back to each ISC for the next iteration. The analysts decided on the names for the files that were exchanged. However, this version of the process was prone to errors when many files were generated, and fitting models one at a time was very labour-intensive.  
+
+Because of this, new routines were written with the following features: 
+
+* A series of models, based on the same datasets, are fitted together, and these are defined by a list of formulae. 
+* Each series of models is given a project name. 
+
+* The names of the files to be exchanged between the computers are generated automatically by the R routines, incorporating the project name, the iteration number and the study number (where appropriate).
+
+Thus for a project called 'PR1' with three studies being combined, the following files would be exchanged, all of which are created and named by the eds routines. 
+
+`"Start_project_PR1_Itno_1.R"` is prepared and sent to each of the 3 ISCs
+
+`"Project_PR1_Itno_1_study_1.R"` is sent to AC by ISC1   
+`"Project_PR1_Itno_1_study_2.R"` is sent to AC by ISC2   
+`"Project_PR1_Itno_1_study_3.R"` is sent to AC by ISC3  
+
+`"Joint_fit_project_PR1_Itno_2.R"` is sent to each of ISC1 ISC2 ISC3 by AC 
+
+`"Project_PR1_Itno_2_study_1.R"` is sent to AC by ISC1   
+`"Project_PR1_Itno_2_study_2.R"` is sent to AC by ISC2   
+`"Project_PR1_Itno_2_study_3.R"` is sent to AC by ISC3   
+
+`"Joint_fit_project_PR1_Itno_3.R"` is sent to each of ISC1 ISC2 ISC3 by AC 
+
+`"Project_PR1_Itno_3_study_1.R"` is sent to AC by ISC1   
+`"Project_PR1_Itno_3_study_2.R"` is sent to AC by ISC2   
+`"Project_PR1_Itno_3_study_3.R"` is sent to AC by ISC3  
+
+`"Joint_fit_project_PR1_Itno_4.R"` is sent to each of ISC1 ISC2 ISC3 by AC 
+
+This continues until the output from the joint fit indicates that all models in the series of formulae have converged. The file of the final joint fit contains the results for the series of models.  
+
+
+##**3. eDatashield (eds) procedures**
+###*Overview*
+
+An eDatashield (eds) project consists of the following steps:
+
+1. Organising and comparing the datasets held at the individual studies to align the variable names, types, levels etc.
+2. Perhaps exchange some non-disclosive data summaries.
+3. Decide on the outcome model, method and set of models to be run jointly combining data from the individual studies.
+4. One study creates an initial structure including the definition of the methods and models and calculates starting values based on one study.
+5. The iterative procedure to fit the joint model is carried out by exchanging summaries by email between individual study computers (ISCs) and the analysis computer (AC).
+6. Once the models have converged the result can be shared between all parties and summaries produced.
+
+The procedures available as part of eDatashield to carry out these steps are described in the following sub-sections. At present eDatashield can be used to fit generalised linear models (`glm` in R) and ordered logisitic regression (`polr` in R).
+
+If a linear model is fitted, only a single iteration is required, but for non-linear models (e.g. logistic or poisson models) a number of iterations will be needed. With good starting values this number should not be more than eight or nine iterations, and intermediate outputs will indicate that the deviance is coming down in an appropriate way.  
+
+Details of the eds routines used in these analyses are detailed below. 
+
+
+###*Preparing data and checking compatibility of datasets*
+The first step in carrying out these joint analyses is for the analysts to agree on the variables they will require for their models and also to agree how any categorical data are defined in the R data frames so as to ensure they have exactly the same levels and codes. The importance of this step was emphasised in the Datashield project where a special tool called DataSHaper was developed [6]. At each study a structure file describing the data set is created with 
+
+`eds.struct(data = "Scotland", output = NULL)`
+
+`data`  -  name of data set  
+`output`  -  name of output file defaults to `struct_data.R`  
+
+This file and the corresponding file from the other studies are then assembled together at another computer (which could either be the AC or one of the ISCs). Note that the data sets to be combined (held on separate computers) should have distinct names, as these will be used by the eds routines.
+This computer then uses `eds.compare` to compare pairs of structures
+
+`source("struct_Scotland.R")`   
+`source("struct_England.R")`   
+`eds.compare(s1 = struct_Scotland, s2 = struct_England)`  
+
+The variables that are held in common between the two data sets will be compared according to data types, and other features. Modifications are agreed until all common variables are compatible. The analysts also agree which study number (between 1 and total number of studies) will be assigned to each ISC. Each ISC  then uses the function `eds.prepare` (see below) to produce a dataset for analysis. This function does some checks, converts any character data in the data frame to R factors, and adds a column to each dataset with the appropriate study number, stored as a factor with the appropriate number of levels e.g. 
+
+`Scotland <- eds.prepare(data = Scotland,studyno = 1,totstuds = 3)` 
+
+
+###*Exchanging non-disclosive summaries*
+Basic summaries, tables of means and counts should be compared between the studies at this stage to ensure some similarity of the variables. One eds routine has been written to facilitate this
+
+`print(eds.data.summary(Scotland,min_cell=10))`
+
+This routine incorporates checks on whether the data are disclosive due to small cell counts, and pools categories or supresses maximum or minimum values as necessary. Additionally any printed output from an ISC should be checked by the staff of that LS's Research Support Unit to ensure that the requirements for confidentiality of that LS are fully met. 
+
+These preliminary steps are very important, as has been discussed in relation to the DataSHIELD project [4]. Several exchanges may be needed to harmonise the data before the formal model-fitting can begin. Assurance that the same types of data are being used by all studies is an important advantage of this methodology. 
+
+
+###*Defining the models*
+Once an outcome variable and type of model have been agreed the series of models for which a joint fit will be estimated needs to be defined. Usually these will be a series of models that increase in complexity e.g.
+ 
+`"smoke ~ 1", "smoke ~ agegroup", "smoke ~ agegroup + studyno", "smoke ~ agegroup + studyno*agegroup"`
+
+Note that the variable studyno which compares the studies can be included in models.
+Models may include the factor for study (studyno) as a predictor. Such models can be used to check which aspects of the model differ between studies, by fitting covariate by study interaction terms. These models cannot be fitted from only one study, thus starting values for coefficients involving studyno will normally be set to zero (see below). 
+
+If it is desired to compare models using a deviance table it is important that the same data set is used in each model. If some variables have missing values the data sets for different models will differ, so it may be helpful to use list-wise deletion to remove records with missing values. A function to do this has been written e.g.
+
+`Scotland_noNA <- eds.removeNA(Scotland, vars = c("smoke", "agegroup")`
+
+
+###*Creating starting structure*
+The first stage is to define the series of models to be fitted and calculate appropriate starting values for each. On any (but only one) ISC, a starting result is created. It must be a list called result with components:
+
+1. project - Name of project (i.e. set of models) e.g. "Firstmods"    
+2. formulae - vector of formulae for models to be fitted    
+3. models - vector of names corresponding to the formulae    
+4. family -  for glm models type of model, e.g. "poisson"    
+5. method - for polr models (defaults to logistic)    
+6. Itno - set to 1 at first iteration coef - list of starting values for coefficients of the models    
+7. weights -  (optional) e.g. "wt", the name of a variable or a vector of variable names to use as a weights. Can be used to exclude rows by setting some wt values to zero  
+8. offset -  (optional) for glm models only to define the offset, usually for poisson models. Offset is the name of a variable to be used as an offset - e.g. offset= "log_pyears"  
+9. coef - (optional, but advised  for glm fits) starting values for the coefficients  
+
+Code to set an object `"result"` to this starting result must be written to a file called `"Start_project_PR1_Itno_1.R"`. This file is then sent to each study computer. During the fitting process the R structure result on each ISC and on the AC is updated at each iteration. This is most easily created by the functions `eds.glm.start` or `eds.polr.start`. A sample call might be
+
+`eds.glm.start(project = "EngScotNI", data = Scotland, formulae = c("smoke ~ 1","smoke ~ age", "smoke ~ age + studyno"), models = c("null","age","age + studyno"), family = "binomial")`
+
+The parameter data is the data being used to calculate the starts, here the one that holds the data set Scotland. This call will write a text file `"Start_ project_EngScotNI_Itno_1.R"` which is then sent to the other two centres. Note that models that include studyno cannot be run on individual studies. Starting values are created from a reduced model and the additional parameters are set to zero.
+
+
+###*ISCs and AC  run first iteration*
+Each ISC places the file in the directory that R is using as the working directory, and runs the eds command, for example for England
+
+`eds.glm.update("EngScotNI",itno = 1,data=England)`
+
+where England is the name of the local data set. This would produce a file `"Project_EngScotNI_Itno_1_Study_2.R"` containing the contribution to the score statistic and the information matrix from this study. Each ISC then sends their file to the AC.
+
+The AC analyst then places all these files: 
+
+* `"Project_EngScotNI_Itno_1_Study_1.R"`
+* `"Project_EngScotNI_Itno_1_Study_2.R"`
+* `"Project_EngScotNI_Itno_1_Study_3.R"`
+
+In the directory where they will run the joint update and runs R from this directory with the command
+
+`eds.joint.update("EngScotNI",itno = 1,studies=1:3)`
+
+This function will write a file `"Joint_fit_project_EngScotNI_Itno_2.R"` which is sent to the ISCs to run iteration 2.
+
+
+###*Subsequent iterations*
+The steps described above are then repeated at subsequent iterations. The only parameter to the functions that requires changed is Itno since everything else is read from the exchanged files. The output at the AC allows the convergence of the models to be checked.  More details of how the models are converging can be produced by setting the parameter quietly to FALSE e.g.
+
+`eds.joint.update("EngScotNI",itno = 4,studies=1:3)`
+
+And more details can be obtained as follows on the AC
+
+`eds.joint.update("EngScotNI",itno = 6,studies=1:3)`  
+`source("Joint_fit_project_EngScotNI_Itno_2.R")`  
+`eds.check.convergence(result)`  
+
+Note that here, and at every stage, sourcing an exchanged file into R will create an object R which is a list of components of the fit, as detailed in Appendix A.
+
+Once all the models have converged the file for the joint fit is circulated to all parties.
+
+
+###*Examining the Results*
+Once the models have converged, the analysis computer can send the final joint fit to each study computer. The ISCs then need to run a command like 
+
+`source("Joint_fit_project_EngScotNIs_Itno_7.R")`
+
+They will now have an R object called `"result"` with the results of the fits to the series of models. It is advisable to rename this to something else by copying into another structure, e.g. 
+
+`final_fit_Test<-result`
+
+Individual components can be extracted, and there are two functions that can be used to get details of the fits
+
+`eds.deviance.table(final_fit_Test)`
+
+which produces a table of deviances and degrees of freedom for each of the fitted models. Note that care must be taken with interpreting results as P-values  quoted will only be relevant if the models use the same numbers of observations. Missing values and weights set to zero for some observations can cause the numbers to differ between models.
+
+The functions to summarise results produce tables of coefficients, standard errors etc. For selected models, or all models by default. There are two such functions:
+
+`eds.glm.summary(final_fit_Test,models = 1:3)`   
+`eds.polr.summary(polr_fit_Test,models = 4)`
+
+These produce output for each model similar to the function summary applied to a `glm` fit or a `polr` fit. 
+
+
+
+##**4. Appendix A: Sample code**
+
+In order to test the eds functions, two data sets are provided called Study1 and Study2. These are subsets of the SD2011 data provided with the `synthpop` package, one is for men and one for women.
+
+When both data sets are held on the same computer the routines can be tested easiy since the files created will all reside in the right place with the need for emails. This also allows it to be demonstrated that eds produces exactly the same results as would be obtained if the data sets were combined. The code for three analyses are presented here.
+
+###*A simple logistic regression model*
+
+`library(MASS)`  
+`library(stringr)`  
+`library(eDataShield)`  
+
+`data(Study1)`  
+`data(Study2)`  
+ 
+`Study1 <- eds.prepare(Study1,1,2)  #ISC1`  
+`Study2 <- eds.prepare(Study2,2,2)  #ISC2`  
+
+`eds.struct(Study1)  #ISC1`  
+`eds.struct(Study2)  #ISC2`  
+`#Now email files "struct_Study1.R" "struct_Study2.R" to other computers`  
+
+`source("struct_Study1.R"); source("struct_Study2.R")   #any ISC or AC`  
+`eds.compare(struct_Study1,struct_Study2)`  
+
+`eds.glm.start(project = "test1", data = Study1,`  
+        `formulae = c("smoke ~ 1","smoke ~ studyno","smoke ~ age", "smoke ~ age + studyno","smoke ~ age*studyno"), models = c("null","studyno","age","age studyno","age*studyno"), family = "binomial")  # ISC1`  
+
+`eds.glm.update("test1",1, Study1)  #ISC1`  
+`eds.glm.update("test1",1, Study2)  #ISC2`  
+`eds.glm.joint.update("test1",1,studies=1:2)  #AC`  
+
+`eds.glm.update("test1",2, Study1)  #ISC1`  
+`eds.glm.update("test1",2, Study2)  #ISC2`  
+`eds.glm.joint.update("test1",2,studies=1:2)  #AC`  
+
+`eds.glm.update("test1",3, Study1)  #ISC1`  
+`eds.glm.update("test1",3, Study2)  #ISC2`  
+`eds.glm.joint.update("test1",3,studies=1:2)  #AC`  
+
+`eds.glm.update("test1",4, Study1)  #ISC1`  
+`eds.glm.update("test1",4, Study2)  #ISC2`  
+`eds.glm.joint.update("test1",4,studies=1:2)  #AC`  
+
+`eds.glm.update("test1",5, Study1)  #ISC1`  
+`eds.glm.update("test1",5, Study2)  #ISC2`  
+`eds.glm.joint.update("test1",5,studies=1:2)  #AC`  
+
+`source("Joint_fit_project_test1_Itno_6.R")   #all computers`  
+
+`eds.deviance.table(result)`  
+`eds.glm.summary(result,5)`  
+`#compares with result from combined data`  
+
+`summary(glm(smoke ~ age + studyno + age:studyno, data = rbind(Study1,Study2), family = "binomial"))`  
+
+
+
+###*A more complicated set of analyses using polr*
+
+
+`library(MASS)`  
+`library(stringr)`  
+`library(eDataShield)`  
+
+`data(Study1)`  
+`data(Study2)`  
+
+`# weights for testing`  
+`Study1 <- eds.prepare(Study1, 1, 2)`  
+`Study1$wt1 <- 1; Study1$wt1[1:1000] <- 0`  
+`Study2 <- eds.prepare(Study2, 2, 2)`  
+`Study2$wt1 <- 1; Study2$wt1[1:1000] <- 0`  
+
+
+`#get start on one of the ISCs`  
+`eds.polr.start(project = "test1", data = Study1, formulae = c("ls ~ studyno","ls ~ age", "ls ~ 1" , "ls ~ age +` `height + englang*studyno","ls ~ 1", "ls ~ englang + studyno","ls ~ age + studyno:age"),weights` `=c("","wt1","wt1","wt1","","",""),method = "logistic",`
+ `models = c("studyno","age wt1", "null wt1" , "age height englang englang*studyno wt1","null", "englang studyno","studyno*age"))`  
+`#now email Start_project_test1_Itno_1.R to ISC2`  
+
+`############################# ITERATION 1 ############################`  
+`#on ISC1`  
+`eds.polr.update("test1",1,Study1)   #this accesses file Start_project_test1_Itno_1.R`  
+`#now email "Project_test1_Itno_1_Study_1.R" to AC`  
+
+`#on ISC2`  
+`eds.polr.update("test1",1,Study2)   #this accesses file Start_project_test1_Itno_1.R`  
+`#now email "Project_test1_Itno_1_Study_2.R" to AC`  
+
+`#on AC`   
+`eds.polr.joint.update("test1",1, quietly = FALSE)  #this accesses the two files from ISC1 and ISC2`  
+`#now email Joint_fit_project_test1_Itno_2.R to each ISC`  
+
+`##########################  now iteration 2 ########################`  
+`#on ISC1`  
+`eds.polr.update("test1",2,Study1)   #this accesses file Start_project_test1_Itno_2.R`  
+`#now email "Project_test1_Itno_2_Study_1.R" to AC`  
+
+`#on ISC2`  
+`eds.polr.update("test1",2,Study2)   #this accesses file Start_project_test1_Itno_2.R`  
+`#now email "Project_test1_Itno_2_Study_2.R" to AC`  
+
+`#on AC`  
+`eds.polr.joint.update("test1",2, quietly = FALSE)   #this accesses the two files from ISC1 and ISC2`  
+`#now email Joint_fit_project_test1_Itno_3.R to each ISC`  
+
+`##########################  now iteration 3 ########################`  
+`#on ISC1`  
+`eds.polr.update("test1",3,Study1)    #this accesses file Start_project_test1_Itno_3.R`  
+`#now email "Project_test1_Itno_3_Study_1.R" to AC`
+
+`#on ISC2`
+`eds.polr.update("test1",3,Study2)   #this accesses file Start_project_test1_Itno_3.R`
+`#now email "Project_test1_Itno_3_Study_2.R" to AC`  
+
+`#on AC`  
+`eds.polr.joint.update("test1",3, quietly = FALSE)   #this accesses the two files from ISC1 and ISC2`  
+`#now email Joint_fit_project_test1_Itno_4.R to each ISC`  
+
+`##########################  now iteration 4 ########################`  
+`#on ISC1`  
+`eds.polr.update("test1",4,Study1)    #this accesses file Start_project_test1_Itno_4.R`  
+`#now email "Project_test1_Itno_4_Study_1.R" to AC`  
+
+`#on ISC2`  
+`eds.polr.update("test1",4,Study2)   #this accesses file Start_project_test1_Itno_4.R`  
+`#now email "Project_test1_Itno_4_Study_2.R" to AC`  
+
+`#on AC`  
+`eds.polr.joint.update("test1",4)     #this accesses the two files from ISC1 and ISC2`  
+`#now email Joint_fit_project_test1_Itno_5.R to each ISC`  
+
+`##########################  now iteration 5 #######################`  
+`#running one more even though all converged`  
+`#on ISC1`  
+`eds.polr.update("test1",5,Study1)    #this accesses file Start_project_test1_Itno_5.R`  
+
+`#on ISC2`  
+`eds.polr.update("test1",5,Study2)    #this accesses file Start_project_test1_Itno_5.R`  
+
+`#on AC`   
+`eds.polr.joint.update("test1",5, quietly = FALSE)    #this accesses the two files from ISC1 and ISC2`  
+`#File Joint_fit_project_test1_Itno_6.R has final result to be shared by all`  
+
+`############################## NOW SUMMARISE ###########################################`  
+
+`source("Joint_fit_project_test1_Itno_6.R")`  
+`names(result)`  
+
+`result$coefficients`  
+`result$coef`  
+`result$zeta`  
+`result$dev`  
+`result$nobs`  
+`result$neffobs`  
+
+`summary.result <- eds.polr.summary(result)`  
+`eds.deviance.table(result)`  
+
+`#No compare 3rd model with that from combined data`  
+
+`resboth <- polr(result$formulae[1], rbind(Study1,Study2), method = "logistic",Hess = TRUE)`  
+`summary(resboth)`  
+
+`eds.polr.summary(result,1)`  
+
+`resboth <- polr(result$formulae[2], rbind(Study1,Study2), method = "logistic",weights = wt1,Hess = TRUE)`  
+`summary(resboth)`  
+
+`eds.polr.summary(result,2)`  
+
+
+##**5. Appendix B: Details of R objects**
+###*Result object*
+
+
+Component                   | Details
+:---------------            | :---------------------------------------------
+project                     | project name    
+formulae                    | list of formulae for fitted models 
+models                      | names for fitted models 
+itno                        | final iteration number
+offset                      | offset variable name 
+weights                     | variable name or vector of variable names (one per model) used as a weight           
+family (glm only)           | family for glm (e.g. "binomial")  
+method (polr only)          | method for intercept in polr, defaults to "logistic"
+coef                        | list of final fitted coefficients for each model 
+coefficients (polr only)    | parameters for predictors
+zeta                        | intercept parameters ( see help for polr)
+data_names                  | vector names of the datasets used in each of the fits one for each study 
+dev                         | list of final deviance for each model 
+info                        | list with information matrix for each model 
+score                       | list with score vector for each fit 
+nobs                        | vector of total observations from each study 
+neffobs                     | matrix giving effective number of observations for each model from each                                            study, excluding those excluded due to missing values or zero weights
+devold                      | list of deviances at penultimate iteration 
+
+
+
+###*List of eds functions*
+
+
+Component                   | Parameters and default values
+:--------------------------            | :--------------------------------------------------------------------------------
+eds.prepare                 | data,studyno=NULL,totstuds=NULL
+eds.struct                  | data,output=NULL
+eds.compare                 | s1, s2
+eds.glm.start               | project, data, formulae, models, family = "binomial", weights = NULL, offset = NULL
+eds.glm.update              | project,itno, data=NULL, quietly = TRUE 
+eds.glm.joint.update        | project,itno, studies=1:2, tol=1e-4, quietly=TRUE
+eds.glm.summary             | result, modelnos=NULL, round=4, print=TRUE, save= FALSE
+eds.polr.start              | project, data, formulae, models, method = "logistic", weights = NULL
+eds.polr.update             | project,itno, data=NULL, quietly = TRUE
+eds.polr.joint.update       | project,itno, studies=1:2, tol=1e-4, quietly=TRUE
+eds.polr.summary            | result, modelnos=NULL, round=4, print=TRUE, save= FALSE
+eds.deviance.table          | result
+
+
+
+##**6. References**
+
+1. Young, H., Grundy, E., O'Reilly, D. and Boyle, P. (2010) Self-rated health and mortality in the UK: results from the first comparative analysis of the England and Wales, Scotland, and Northern Ireland Longitudinal Studies. Population Trends;139(Spring):11-36 
+2. Karr, A.F., Fulp, W.J., Vera, F., Young, S.S., Lin, X. and Reiter, J.P. (2007) Secure, Privacy-Preserving Analysis of Distributed Databases. Technometrics;49(3):335-345, DOI:10.1198/004017007000000209
+3. Wolfson, M., Wallace, S.E., Masca, N., Rowe, G., Sheehan, N.A., Ferretti, V., Laflamme, P., Tobin, M.D., MacLeod, J., Little, J., Fortier, I., Knoppers, B.M. and Burton, P.R. (2010) DataSHIELD: resolving a conflict in contemporary bioscience--performing a pooled analysis of individual-level data without sharing the data. International Journal of Epidemiology;39:1372-1382 
+4. Gaye, A., Marcon, Y., Isaeva, J., LaFlamme, P., Turner, A., Jones, E.M., Minion, J., Boyd, A.W., Newby, C.J., Nuotio, M-L., Wilson, R., Butters, O., Murtagh, B.P., Doiron, D., Giepmans, L., Wallace, S.E., Budin-Ljosne, I., Schmidt, C.O., Boffetta, P., Boniol, M., Bota, M., Carter, K.W., deKlerk, N., Dibben, C., Francis, R.W., Hiekkalinna, T., Hveem, K., Kvaloy, K., Millar, S., Perry, I.J., Peters, A., Phillips, C.M., Popham, F., Raab, G., Reischl, E., Sheehan, N., Waldenberger, M., Perola, M., van den Heuvel, E., Macleod, J., Knoppers, B.M., Stolk, R.P., Fortier, I., Harris, J.R., Woffenbuttel, B.H.R., Murtagh, M.J., Ferretti, V. and Burton, P.R. (2014). DataSHIELD: taking the analysis to the data, not the data to the analysis. International Journal of Epidemiology ;43(6):1929-44
+5. Wright, D. M., Rosato, M., Raab, G., Dibben, C., Boyle, P. and O'Reilly, D. (2017). Does equality legislation reduce intergroup differences? Religious affiliation, socio-economic status and mortality in Scotland and Northern Ireland: a cohort study of 400,000 people Health and Place, 32-38. DOI:10.1016/j.healthplace.2017.02.009
+6. Fortier, I., Burton, P.R., Robson, P.J., Ferretti, V., Little, J., L'Heureux, F., Deschênnes, M., Knoppers, B.M., Doiron, D., Keers, J.C., Linksted, P., Harris, J. R., Lachance, G., Boileau, C., Pedersen, N.L., Hamilton, C.M., Hveem, K., Borugian, M.J., Gallagher, R.P., McLaughlin, J., Parker, L., Potter, J.D., Gallagher, J., Kaaks, R., Liu, B., Sprosen, T., Vilain, A., Atkinson, S.A., Rengifo, A., Morton, R., Metspalu, A., Wichmann, H.E., Tremblay, M., Chisholm, R.L., Garcia-Montero, A., Hillege, H., Litton, J.E., Palmer, L.J., Perola, M., Wolffenbuttel, B.H.R., Peltonen, L. and Hudson, T.J. (2010) Quality, quantity and harmony: the DataSHaPER approach to integrating data across bioclinical studies. International Journal of Epidemiology;39:1383-1393.

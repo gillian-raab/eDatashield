@@ -1,0 +1,16 @@
+eDataShield-package	eDataShield-package
+eDataShield	eDataShield-package
+eds.compare	eds.compare
+eds.deviance.table	eds.deviance.table
+eds.glm.joint.update	eds.glm.joint.update
+eds.glm.start	eds.glm.start
+eds.glm.summary	eds.glm.summary
+eds.glm.update	eds.glm.update
+eds.polr.joint.update	eds.polr.joint.update
+eds.polr.start	eds.polr.start
+eds.polr.summary	eds.polr.summary
+eds.polr.update	eds.polr.update
+eds.prepare	eds.prepare
+eds.struct	eds.struct
+Study1	Study1
+Study2	Study2
